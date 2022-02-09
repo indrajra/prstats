@@ -1,8 +1,7 @@
 package com.company;
 
 import com.google.devtools.common.options.OptionsParser;
-import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
+import org.kohsuke.github.*;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -12,6 +11,7 @@ public class Main {
     private static OptionsParser parser;
     private static CmdOptions options;
     private static TeamInfo teamInfo;
+    private static UserTeamNameCache userTeamNameCache;
 
     public static void main(String[] args) throws IOException {
         ensureInputs(args);
@@ -19,17 +19,31 @@ public class Main {
         GitHub github = GitHubBuilder.fromPropertyFile().build();
         System.out.println("Hello...working with token of " + github.getMyself().getName());
         teamInfo = new TeamInfo(github, options.orgName, options.teamName);
+        TeamInfo.loadUsersIntoCache(github, options.orgName);
+
         RepoNameHelper repoNameHelper = new RepoNameHelper(options.orgName, options.repoName);
 
-        PullRequestCollector pullRequestCollector = new PullRequestCollector(github, repoNameHelper.getRepoName());
+        PullRequestCollector pullRequestCollector = new PullRequestCollector(github, repoNameHelper.getRepoName(), options.teamName);
 
-        String involvedTeamQuery = new QueryStringBuilder(options).getQueryInvolvedPulls(teamInfo);
+        QueryStringBuilder queryStringBuilder = new QueryStringBuilder(options);
+        String involvedTeamQuery = queryStringBuilder.getQueryInvolvedPulls(teamInfo);
         List<DataModel> dataModels = pullRequestCollector.collect(involvedTeamQuery);
+
+//        String openIssues = queryStringBuilder.getOpenIssues();
+//        GHIssueSearchBuilder issueSearchBuilder = github.searchIssues().q(openIssues);;
+//        PagedSearchIterable<GHIssue> issueResults = issueSearchBuilder.list();
+//        issueResults.forEach(iss -> {
+//            System.out.println(iss.getNumber() + ",");
+//        });
 
         distinguishTeamPRs(dataModels);
 
         OutputGenerator outputGenerator = new OutputGenerator();
-        outputGenerator.writeToFile(dataModels);
+        outputGenerator.writeToFile(options.friendlyName, dataModels);
+    }
+
+    public static String getReportBuilderTeamName() {
+        return options.teamName;
     }
 
     private static void distinguishTeamPRs(List<DataModel> dataModels) {

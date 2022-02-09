@@ -11,10 +11,15 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder
 public class DataModel {
+    private String sprintId;
     private long id;
     private String status;
 
     private String author;
+    // The team the author belongs to.
+    private String authorTeam;
+    // The team for which the report is being run.
+    private String reportOfTeam;
     @JsonSerialize(contentUsing = JsonDateSerializer.class)
     private Date createdDate;
     @JsonSerialize(contentUsing = JsonDateSerializer.class)
@@ -41,6 +46,22 @@ public class DataModel {
     private List<String> reviewerTeamsRequested = new ArrayList<>();
     private List<String> reviewersUnanswered = new ArrayList<>();
     private String title;
+
+    public String getReportOfTeam() {
+        return reportOfTeam;
+    }
+
+    public void setReportOfTeam(String reportOfTeam) {
+        this.reportOfTeam = reportOfTeam;
+    }
+
+    public String getAuthorTeam() {
+        return authorTeam;
+    }
+
+    public void setAuthorTeam(String authorTeam) {
+        this.authorTeam = authorTeam;
+    }
 
     public long getnHoursToFirstResponse() {
         return nHoursToFirstResponse;
@@ -254,4 +275,6 @@ public class DataModel {
         this.nDeletions = nChanges;
         return this;
     }
+
+
 }

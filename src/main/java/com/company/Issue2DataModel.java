@@ -13,7 +13,14 @@ import java.util.stream.Collectors;
 import static java.time.temporal.ChronoUnit.HOURS;
 
 public class Issue2DataModel {
-    public static DataModel transform(GHPullRequest pr) throws IOException {
+    private static String reportOfTeam;
+    private static UserTeamNameCache userTeamNameCache = UserTeamNameCache.getInstance();
+
+    public void setReportOfTeam(String name) {
+        reportOfTeam = name;
+    }
+
+    public DataModel transform(GHPullRequest pr) throws IOException {
         DataModel dataModel = new DataModel().setAuthor(User.getLoginName(pr.getUser()))
                 .setClosedDate(pr.getClosedAt())
                 .setId(pr.getNumber())
@@ -25,6 +32,9 @@ public class Issue2DataModel {
                 .setCreatedDate(pr.getCreatedAt())
                 .setStatus(pr.getState().name())
                 .setTitle(pr.getTitle());
+
+        dataModel.setAuthorTeam(userTeamNameCache.getTeamName(dataModel.getAuthor()));
+        dataModel.setReportOfTeam(reportOfTeam);
 
         List<String> prLabels = pr.getLabels().stream()
                 .map(GHLabel::getName)

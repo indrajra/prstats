@@ -111,6 +111,10 @@ public class QueryStringBuilder {
         return result + " " + stringBuilder.toString();
     }
 
+    public String getOpenIssues() {
+        return queryString.getOpenCodeHygieneIssues();
+    }
+
     private class QueryString {
         public String getCreatedPullsAfter(String repoName, String after) {
             return String.format("type:pr repo:%s created:>=%s", repoName, after);
@@ -118,6 +122,10 @@ public class QueryStringBuilder {
 
         public String getCreatedPullsInDateRange(String repoName, String afterDate, String beforeDate) {
             return String.format("type:pr repo:%s created:%s..%s", repoName, afterDate, beforeDate);
+        }
+
+        public String getOpenCodeHygieneIssues() {
+            return String.format("is:issue is:open label:team-turing label:code-hygiene");
         }
     }
 }

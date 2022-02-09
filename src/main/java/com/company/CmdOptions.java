@@ -17,7 +17,7 @@ public class CmdOptions extends OptionsBase {
             name = "org",
             abbrev = 'o',
             help = "Org name",
-            defaultValue = ""
+            defaultValue = "fivetran"
     )
     public String orgName;
 
@@ -33,7 +33,7 @@ public class CmdOptions extends OptionsBase {
             name = "team",
             abbrev = 't',
             help = "Team name",
-            defaultValue = ""
+            defaultValue = "Liskov"
     )
     public String teamName;
 
@@ -41,7 +41,7 @@ public class CmdOptions extends OptionsBase {
             name = "after",
             abbrev = 'a',
             help = "Created after date in yyyy-mm-dd format, inclusive",
-            defaultValue = "2020-07-29"
+            defaultValue = "2021-07-28"
     )
     public String afterDate;
 
@@ -49,7 +49,15 @@ public class CmdOptions extends OptionsBase {
             name = "before",
             abbrev = 'b',
             help = "Created before date in yyyy-mm-dd format. Optional, defaults to today",
-            defaultValue = "2020-11-04"
+            defaultValue = "2022-01-27"
     )
     public String beforeDate;
+
+    @Option(
+            name = "name",
+            abbrev = 'n',
+            help = "Friendly name to the date range",
+            defaultValue = "q34_fy2021"
+    )
+    public String friendlyName;
 }

@@ -1,0 +1,22 @@
+# Config
+.idea/
+.project/**/
+.ijwb/
+*.iml
+
+# Generated
+*.map
+*.log
+*.jar
+*~
+*.DS_Store
+*.jfr
+version.txt
+/logs
+*/logs/
+*/target/
+*/.gradle/
+*/build/
+target/
+out/
+

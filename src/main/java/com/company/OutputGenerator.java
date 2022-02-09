@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class OutputGenerator {
-    public void writeToFile(List<DataModel> dataModelList) {
+    public void writeToFile(String name, List<DataModel> dataModelList) {
         if (dataModelList.isEmpty()) {
             System.out.println("Nothing to write.");
             return;
@@ -32,7 +32,7 @@ public class OutputGenerator {
         try {
             csvMapper.writerFor(JsonNode.class)
                     .with(csvSchema)
-                    .writeValue(new File("pulls.csv"), all);
+                    .writeValue(new File(String.format("%s-pulls.csv", name)), all);
         } catch (IOException e) {
             e.printStackTrace();
         }

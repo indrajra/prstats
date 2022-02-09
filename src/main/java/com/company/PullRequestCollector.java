@@ -4,19 +4,19 @@ import org.kohsuke.github.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class PullRequestCollector {
     private GitHub github;
     private String repoName;
+    private String reportOfTeam;
     private List<DataModel> dataModelList = new ArrayList<>();
-    //private HashSet<Integer> prNumbers = new HashSet<>();
     GHRepository ghRepository;
 
-    public PullRequestCollector(GitHub gh, String repo) {
+    public PullRequestCollector(GitHub gh, String repo, String rptOfTeam) {
         github = gh;
         repoName = repo;
+        reportOfTeam = rptOfTeam;
     }
 
     public List<DataModel> collect(String queryStr) throws IOException {
@@ -36,13 +36,12 @@ public class PullRequestCollector {
         issueResults.forEach(issue -> {
             System.out.println(String.format("Start processing pull request %d", issue.getNumber()));
             try {
-                //if (!prNumbers.contains(issue.getNumber())) {
-                    GHPullRequest pr = ghRepository.getPullRequest(issue.getNumber());
-                    DataModel dm = Issue2DataModel.transform(pr);
+                GHPullRequest pr = ghRepository.getPullRequest(issue.getNumber());
+                Issue2DataModel issue2DataModel = new Issue2DataModel();
+                issue2DataModel.setReportOfTeam(reportOfTeam);
 
-                    //prNumbers.add(issue.getNumber());
-                    dataModelList.add(dm);
-                //}
+                DataModel dm = issue2DataModel.transform(pr);
+                dataModelList.add(dm);
             } catch (IOException e) {
                 e.printStackTrace();
             }
